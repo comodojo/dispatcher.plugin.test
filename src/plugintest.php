@@ -30,7 +30,7 @@ class plugintest {
 
 	public static function custom_404($ObjectError) {
 
-		$error_page = file_get_contents(DISPATCHER_REAL_PATH."vendor/comodojo/dispatcher.plugin.test/resources/html/404.html";);
+		$error_page = file_get_contents(DISPATCHER_REAL_PATH."vendor/comodojo/dispatcher.plugin.test/resources/html/404.html");
 
 		$ObjectError->setContent($error_page);
 
@@ -44,10 +44,18 @@ class plugintest {
 
 		if ( array_key_exists("C-Conditional-route", $headers) ) {
 
-			$ObjectRoute->setTarget("vendor/comodojo/dispatcher.servicebundle.test/services/test_route_second.php")
+			$ObjectRoute->setClass("test_route_second")->setTarget("vendor/comodojo/dispatcher.servicebundle.test/services/test_route_second.php");
 		}
 
 		return $ObjectRoute;
+
+	}
+
+	public static function add_attribute($ObjectRequest) {
+
+		$ObjectRequest->setAttribute("foo","boo");
+
+		return $ObjectRequest;
 
 	}
 
@@ -58,5 +66,7 @@ $pt = new plugintest();
 $dispatcher->addHook("dispatcher.error.404", $pt, "custom_404");
 
 $dispatcher->addHook("dispatcher.serviceroute.test_route_first", $pt, "conditional_routing_header");
+
+$dispatcher->addHook("dispatcher.request.test_addattribute", $pt, "add_attribute");
 
 ?>
