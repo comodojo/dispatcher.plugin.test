@@ -20,6 +20,6 @@
         }
     ],
     "extra": {
-        "comodojo-plugin-load": "plugintest"
+        "comodojo-plugin-load": "Plugintest"
     }   
 }

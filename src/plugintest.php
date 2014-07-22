@@ -1,11 +1,11 @@
-<?php namespace comodojo\DispatcherPlugin;
+<?php namespace Comodojo\DispatcherPlugin;
 
 /**
  * Event routing presets for dispatcher.servicebundle.test
  * 
- * @package		Comodojo dispatcher (Spare Parts)
- * @author		comodojo <info@comodojo.org>
- * @license		GPL-3.0+
+ * @package     Comodojo dispatcher (Spare Parts)
+ * @author      comodojo <info@comodojo.org>
+ * @license     GPL-3.0+
  *
  * LICENSE:
  * 
@@ -25,48 +25,45 @@
 
 global $dispatcher;
 
+class Plugintest {
 
-class plugintest {
+    public static function custom_404($ObjectError) {
 
-	public static function custom_404($ObjectError) {
+        $error_page = file_get_contents(DISPATCHER_REAL_PATH."vendor/comodojo/dispatcher.plugin.test/resources/html/404.html");
 
-		$error_page = file_get_contents(DISPATCHER_REAL_PATH."vendor/comodojo/dispatcher.plugin.test/resources/html/404.html");
+        $ObjectError->setContent($error_page);
 
-		$ObjectError->setContent($error_page);
+        return $ObjectError;
 
-		return $ObjectError;
+    }
 
-	}
+    public static function conditional_routing_header($ObjectRoute) {
 
-	public static function conditional_routing_header($ObjectRoute) {
+        $headers = apache_request_headers();
 
-		$headers = apache_request_headers();
+        if ( array_key_exists("C-Conditional-route", $headers) ) {
 
-		if ( array_key_exists("C-Conditional-route", $headers) ) {
+            $ObjectRoute->setClass("test_route_second")->setTarget("vendor/comodojo/dispatcher.servicebundle.test/services/test_route_second.php");
+        }
 
-			$ObjectRoute->setClass("test_route_second")->setTarget("vendor/comodojo/dispatcher.servicebundle.test/services/test_route_second.php");
-		}
+        return $ObjectRoute;
 
-		return $ObjectRoute;
+    }
 
-	}
+    public static function add_attribute($ObjectRequest) {
 
-	public static function add_attribute($ObjectRequest) {
+        $ObjectRequest->setAttribute("foo","boo");
 
-		$ObjectRequest->setAttribute("foo","boo");
+        return $ObjectRequest;
 
-		return $ObjectRequest;
-
-	}
+    }
 
 }
 
-$pt = new plugintest();
+$pt = new Plugintest();
 
 $dispatcher->addHook("dispatcher.error.404", $pt, "custom_404");
 
 $dispatcher->addHook("dispatcher.serviceroute.test_route_first", $pt, "conditional_routing_header");
 
 $dispatcher->addHook("dispatcher.request.test_addattribute", $pt, "add_attribute");
-
-?>
