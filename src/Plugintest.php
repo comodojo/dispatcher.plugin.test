@@ -39,9 +39,9 @@ class Plugintest {
 
     public static function conditional_routing_header($ObjectRoute) {
 
-        $headers = apache_request_headers();
+        $headers = self::getRequestHeaders();
 
-        if ( array_key_exists("C-Conditional-route", $headers) ) {
+        if ( array_key_exists("C-Conditional-Route", $headers) ) {
 
             $ObjectRoute->setClass("test_route_second")->setTarget("vendor/comodojo/dispatcher.servicebundle.test/services/test_route_second.php");
         }
@@ -55,6 +55,25 @@ class Plugintest {
         $ObjectRequest->setAttribute("foo","boo");
 
         return $ObjectRequest;
+
+    }
+
+    static public function getRequestHeaders() {
+
+        $headers = '';
+
+        if (function_exists('getallheaders')) $headers = getallheaders();
+
+        else {
+
+            foreach ($_SERVER as $name => $value) {
+
+                if (substr($name, 0, 5) == 'HTTP_') $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+
+        }
+
+        return $headers;
 
     }
 
