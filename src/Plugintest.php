@@ -3,7 +3,7 @@
 /**
  * Event routing presets for dispatcher.servicebundle.test
  * 
- * @package     Comodojo dispatcher (Spare Parts)
+ * @package     Comodojo dispatcher
  * @author      comodojo <info@comodojo.org>
  * @license     GPL-3.0+
  *
